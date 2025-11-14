@@ -23,6 +23,12 @@ class SSEEngine {
 
           steps.push(function open(next) {
             // TODO: need to wait for state here / handle connection error, e.g. with invalid URL
+
+            // WancoInc fork: give a special function to modify the target at runtime
+            if (self.script.config.processor?.[spec.onConnect]) {
+                self.script.config.processor[spec.onConnect].call(self, initialContext, events);
+            }
+
             const es = new EventSource(self.target, self.eventSourceConfig);
             es.on('error', (err) => {
               if (err.status) {
